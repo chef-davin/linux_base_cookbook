@@ -46,3 +46,10 @@ describe command('timedatectl status') do
   its('stdout') { should match /America\/New_York/ }
   its('exit_status') { should eq 0 }
 end
+
+# http://inspec.io/docs/reference/resources/file/
+describe file('/etc/resolv.conf') do
+  it { should exist }
+  it { should be_owned_by 'root'}
+  its('content') { should match /8.8.8.8/ }
+end
