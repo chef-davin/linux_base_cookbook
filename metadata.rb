@@ -4,7 +4,7 @@ maintainer_email 'davin@chef.io'
 license 'All Rights Reserved'
 description 'Installs/Configures linux_base'
 long_description 'Installs/Configures linux_base'
-version '0.1.0'
+version '1.0.0'
 chef_version '>= 14.0'
 
 # The `issues_url` points to the location where issues for this cookbook are

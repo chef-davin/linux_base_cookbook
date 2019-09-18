@@ -1,11 +1,11 @@
 # linux_base CHANGELOG
 
-This file is used to list changes made in each version of the linux_base cookbook.
+Changes made as we progress along in adjusting this cookbook
 
-# 0.1.0
+## 1.0.0
 
-Initial release.
+- Prepped for test 1
 
-- change 0
-- change 1
+## 0.1.0
 
+- Initial release. Generated cookbook
