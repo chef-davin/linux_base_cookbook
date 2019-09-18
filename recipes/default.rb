@@ -29,7 +29,16 @@ end
 # setting up the timezone and setting system clock to use UTC.
 timezone 'setup EST for timezone with UTC system clock' do
   timezone 'America/New_York'
+  action :set
 end
+
+execute 'force UTC time if it is not set' do
+  command 'timedatectl set-local-rtc 0 --adjust-system-clock'
+  action :run
+  only_if 'hwclock --debug | grep "Assuming hardware clock is kept in local time"'
+end
+
+
 # As a note, I had a really nice custom resource written to do this 
 # once upon of time back wiht chef-client 12.
 # All my old work has been overwritten...
@@ -41,7 +50,6 @@ end
 service 'cups' do
   action [:disable, :stop]
 end
-
 
 execute 'reload systemctl daemons' do
   command 'systemctl daemon-reload'
@@ -56,7 +64,6 @@ deb_service_files.each do |svcfile|
     notifies :run, 'execute[reload systemctl daemons]', :delayed
   end
 end
-
 
 package 'cups' do
   action :purge
