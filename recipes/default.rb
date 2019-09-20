@@ -38,13 +38,11 @@ execute 'force UTC time if it is not set' do
   only_if 'hwclock --debug | grep "Assuming hardware clock is kept in local time"'
 end
 
-
-# As a note, I had a really nice custom resource written to do this 
+# As a note, I had a really nice custom resource written to do this
 # once upon of time back wiht chef-client 12.
 # All my old work has been overwritten...
 # This makes me sad, though I'm happy to see the progress that chef has made
 # :sadpanda:
-
 
 # Kill the CUPS! Save the Trees!
 service 'cups' do
@@ -76,3 +74,4 @@ template '/etc/resolv.conf' do
   mode '0644'
 end
 
+include_recipe 'linux_base::webserver'

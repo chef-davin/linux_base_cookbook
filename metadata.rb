@@ -18,3 +18,6 @@ chef_version '>= 14.0'
 # a Supermarket.
 #
 # source_url 'https://github.com/<insert_org_here>/linux_base'
+
+# dependencies:
+depends 'apache2', '>= 7.1.1'

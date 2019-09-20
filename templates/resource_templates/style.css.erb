@@ -1,0 +1,9 @@
+/* this file is maintained by chef - changes will be overwritten */
+
+<% @configHash.each do |tag, hash| %>
+<%= tag + ' {' %>
+  <% hash.each do |property, value| %>
+<%= property.gsub('_','-') + ": " + value + ";" %>
+  <% end %>
+<%= '}' %>
+<% end %>

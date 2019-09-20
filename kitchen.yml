@@ -1,6 +1,8 @@
 ---
 driver:
   name: vagrant
+  network:
+  - ["forwarded_port", {guest: 443, host: 443, auto_correct: true}]
 
 ## The forwarded_port port feature lets you connect to ports on the VM guest via
 ## localhost on the host.
