@@ -1,6 +1,6 @@
 # linux_base
 
-This is just a basic cookbook for doing some things on linux systems that I'm writing in order to demonstrate my capabilities as a cookbook author.
+This is a cookbook really just helping to assess my skills, and in some cases (Inspec) improve them.  This is not to be used on real systems in any way.
 
 ## Task 1
 
