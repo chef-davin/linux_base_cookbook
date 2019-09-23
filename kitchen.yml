@@ -30,5 +30,5 @@ suites:
   - name: default
     verifier:
       inspec_tests:
-        - test/integration/default
+        - test/integration/ps_tests
     attributes:

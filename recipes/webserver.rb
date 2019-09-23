@@ -1,3 +1,11 @@
+#
+# Cookbook:: linux_base
+# Recipe:: webserver
+# 
+# Stands up Apache 2 server and creates a basic placeholder index.html web page
+#
+# Copyright:: 2019, Chef, All Rights Reserved.
+
 ssl_dir           = '/opt/apache2/ssl'
 ssl_cert_file     = "#{ssl_dir}/server.crt"
 ssl_cert_key_file = "#{ssl_dir}/server.key"
@@ -51,6 +59,8 @@ cookbook_file "#{app_dir}/background.jpg" do
   group   lazy { default_apache_group }
   action :create
 end
+
+ENV['TZ'] = 'US/Eastern'
 
 run_time = Time.new.strftime('%c')
 

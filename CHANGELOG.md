@@ -2,6 +2,16 @@
 
 Changes made as we progress along in adjusting this cookbook
 
+## 2.5.0
+
+- Updated for Task 2:
+  - Updated InSpec to test for everything in version 2 and version 1
+- Modified recipe layout to put different functions into different, distinct recipes
+  - The default recipe now just calls sub-recipes so that a run-list doesn't need to list them all
+- Updated the tests to run from an actual Inspec profile, because I wanted to get better at building Inspec profiles
+  - There are separate controls for the different functions of Jeff's tasks
+  - Possibly, this profile could be used to validate cookbooks from future PS folks who's cookbook ability is being assessed
+
 ## 2.0.0
 
 - Updated for Task 2:

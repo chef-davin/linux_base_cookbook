@@ -1,0 +1,10 @@
+name: ps_tests
+title: InSpec Profile
+maintainer: Davin Taddeo
+copyright: Chef
+copyright_email: you@chef.io
+license: Apache-2.0
+summary: An InSpec Compliance Profile
+version: 0.1.0
+supports:
+  platform: linux
