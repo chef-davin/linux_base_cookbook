@@ -28,7 +28,7 @@ timezone 'setup EST for timezone with UTC system clock' do
   action :set
 end
 
-# Because the above resource doesn't seem to do what it claims 
+# Because the above resource doesn't seem to do what it claims
 #   to do and set the hwclock to UTC I'm forcing the issue
 execute 'force UTC time if it is not set' do
   command 'timedatectl set-local-rtc 0 --adjust-system-clock'

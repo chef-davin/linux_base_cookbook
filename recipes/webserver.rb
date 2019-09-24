@@ -1,7 +1,7 @@
 #
 # Cookbook:: linux_base
 # Recipe:: webserver
-# 
+#
 # Stands up Apache 2 server and creates a basic placeholder index.html web page
 #
 # Copyright:: 2019, Chef, All Rights Reserved.

@@ -3,10 +3,10 @@
 # Recipe:: dns
 #
 # Having Chef manage DNS resolution on the system
-# 
+#
 # Copyright:: 2019, The Authors, All Rights Reserved.
 
-#Let Chef Manage DNS
+# Let Chef Manage DNS
 service 'systemd-resolved' do
   action [:disable, :stop]
   only_if { node['platform'] =~ /(debian|ubuntu)/ }

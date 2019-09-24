@@ -9,7 +9,7 @@ control 'time-1.0.0' do
   describe command('/sbin/hwclock --debug') do
     its('stdout') { should match /Assuming hardware clock is kept in UTC time/ }
     its('exit_status') { should eq 0 }
-  end 
+  end
 end
 
 control 'time-1.0.1' do

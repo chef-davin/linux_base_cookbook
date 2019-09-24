@@ -61,10 +61,10 @@ control 'webserver-1.0.4' do
   title 'Validate timestamp in the index.tml'
   desc 'Timestamp should match modified time of the index.html'
   timecheck_cmd = [
-    "#!/bin/bash",
+    '#!/bin/bash',
     "export filemtime=$(stat -c %y #{app_dir}/index.html)",
     "export indxmtime=$(date -d \"$filemtime\" | awk -F ':' '{print $1}')",
-    "grep \"${indxmtime}\" #{app_dir}/index.html"
+    "grep \"${indxmtime}\" #{app_dir}/index.html",
   ].join("\n")
 
   # http://inspec.io/docs/reference/resources/command/
