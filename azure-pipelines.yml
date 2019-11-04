@@ -10,10 +10,92 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+  - script: |
+      # Define a function that returns true if cookbook version passed as argument 1
+      # is less than or equal to the cookbook version passed as argument 2
+      semver_lte() { 
+        [ "$1" = "$( echo -e "$1\n$2" | sort -rV | head -n1 )" ]
+      }
+      # Grab the version strings from the master and current branches
+      master_version=$( git show origin/master:metadata.rb | grep "^version" | tr '"' "'" | cut -f2 -d\' )
+      branch_version=$( grep "^version" metadata.rb | tr '"' "'" | cut -f2 -d\' )
+    
+      echo 'Feature branch cookbook version:' $branch_version
+      echo 'Master branch cookbook version: ' $master_version
+      if semver_lte branch_version master_version; then
+        echo 'ERROR: Cookbook version must be greater than the version in the master branch'
+        exit 1
+      fi
+    workingDirectory: $(Build.Repository.LocalPath)
+    condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master')) # Don't run on master
+    displayName: 'Verify cookbook version bump'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+  - task: DownloadSecureFile@1
+    inputs:
+      secureFile: kitchen.pem
+    displayName: 'Download SSH Key for Test Kitchen'
+
+  - task: DownloadSecureFile@1
+    inputs:
+      secureFile: credentials
+    displayName: 'Download the Azure Creds file'  
+
+  - script: |
+      if [ ! -d /opt/chef-workstation ]; then
+        curl -L https://omnitruck.chef.io/install.sh | sudo bash -s -- -P chef-workstation
+      fi
+    displayName: 'Install Chef Workstation'
+
+  # - script: |
+  #     # Create a config.rb file that uses the pem file that was downloaded
+  #     mkdir -p ~/.chef
+  #     mkdir -p ~/.azure
+  #     mv $(Agent.TempDirectory)/ado_admin.pem ~/.chef
+  #     mv $(Agent.TempDirectory)/credentials ~/.azure
+  #     cat >~/.chef/config.rb <<EOF
+  #     current_dir = File.dirname(__FILE__)
+  #     log_level :info
+  #     log_location STDOUT
+  #     node_name "ado_admin"
+  #     client_key "#{current_dir}/ado_admin.pem"
+  #     chef_server_url 'https://chefinfra.phillips66.net/organizations/p66'
+  #     chef_license 'accept'
+  #     EOF
+  #     # Fetch the latest OpsWorks SSL certs (which get updated once a week)
+  #     #knife ssl fetch https://acpbcas1-zptguzlbztfhdbaj.us-west-2.opsworks-cm.io
+  #     #knife ssl fetch https://acpbcas1-zptguzlbztfhdbaj.us-west-2.opsworks-cm.io:8443
+  #     knife ssl fetch 
+      
+    displayName: 'Set up access to Chef server'
+  
+  - script: chef env --chef-license accept
+    displayName: 'Accept License'
+
+  - script: cookstyle . 
+    displayName: 'Run Cookstyle'
+
+  - script: kitchen create
+    env:
+      USERNAME: linuxbuild
+      COMPUTERNAME: linuxbuildagent
+      KITCHEN_ID: kitchen
+      KITCHEN_KEY_PATH: $(Agent.TempDirectory)/kitchen.pem
+    displayName: 'Run Test Kitchen - Create'
+
+  - script: kitchen converge -l debug
+    env:
+      CHEF_LICENSE: 'accept'
+    displayName: 'Run Test Kitchen - Converge'
+
+  - script: kitchen verify
+    displayName: 'Run Test Kitchen - Verify'
+
+  - script: kitchen destroy
+    displayName: 'Run Test Kitchen - Destroy'
+    condition: always()
+
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish cookbook to Release pipeline'
+    inputs:
+      PathtoPublish: '$(System.DefaultWorkingDirectory)'
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master')) # Only run on master
